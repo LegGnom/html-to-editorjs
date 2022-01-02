@@ -119,7 +119,7 @@ func CodeHandler(selection *goquery.Selection) *scheme.Block {
 * **blocks.Image** - tags `img`, `figure` 
 * **blocks.Quote** - tags `figure`, `blockquote`
 * **blocks.Delimiter** - tag `hr`
-* * **blocks.Table** - tag `table`
+* **blocks.Table** - tag `table`
 
 If you need to add a handler to another tag, for example to div:
 
