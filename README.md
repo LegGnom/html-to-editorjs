@@ -29,6 +29,7 @@ func main() {
         </ul>
 	`
 
+	html_to_editorjs.RegistryAll()
 	j, _ := json.MarshalIndent(html_to_editorjs.Parse(html), "", "   ")
 	fmt.Println(string(j))
 }
@@ -74,6 +75,56 @@ It will generate the following output:
    ],
    "version": ""
 }
+```
+
+### Adding new handlers
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/LegGnom/html-to-editorjs"
+	"github.com/LegGnom/html-to-editorjs/scheme"
+	"github.com/PuerkitoBio/goquery"
+)
+
+
+func main(t *testing.T) {
+	html := `
+		<pre>My code block</pre>
+	`
+	html_to_editorjs.RegistryBlock("pre", CodeHandler)
+	fmt.Println(html_to_editorjs.Parse(html))
+}
+
+func CodeHandler(selection *goquery.Selection) *scheme.Block {
+	html, _ := selection.Unwrap().Html()
+	if html != "" {
+		return &scheme.Block{
+			Type: "code",
+			Data: scheme.BlockData{
+				"code": html,
+			},
+		}
+	}
+
+	return nil
+}
+```
+
+## Supported handlers
+* **blocks.Paragraph** - tag `p`
+* **blocks.Header** - tags `h1`, `h2`, `h3`, `h4`, `h5`
+* **blocks.List** - tags `ul`, `ol`
+* **blocks.Image** - tags `img`, `figure` 
+* **blocks.Quote** - tags `figure`, `blockquote`
+* **blocks.Delimiter** - tag `hr`
+* * **blocks.Table** - tag `table`
+
+If you need to add a handler to another tag, for example to div:
+
+```go
+html_to_editorjs.RegistryBlock("div", blocks.Image)
 ```
 
 ## License
