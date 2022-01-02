@@ -31,7 +31,7 @@ func RegistryBlock(name string, handler scheme.BlockHandler) {
 	blockHandlers[name] = handler
 }
 
-func Parse(payload string) string {
+func Parse(payload string) scheme.Response {
 	nodes := helpers.GetContentSelection(payload)
 
 	response := scheme.Response{
@@ -52,5 +52,5 @@ func Parse(payload string) string {
 
 	})
 
-	return helpers.ToString(response)
+	return response
 }
