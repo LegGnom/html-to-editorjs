@@ -89,7 +89,7 @@ import (
 )
 
 
-func main(t *testing.T) {
+func main() {
 	html := `
 		<pre>My code block</pre>
 	`
