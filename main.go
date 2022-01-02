@@ -8,9 +8,10 @@ import (
 	"time"
 )
 
-var blockHandlers = map[string]scheme.BlockHandler{}
+var blockHandlers = map[string][]scheme.BlockHandler{}
 
-func init() {
+// RegistryAll adds all system block handlers to the parser
+func RegistryAll() {
 	RegistryBlock("p", blocks.Paragraph)
 	RegistryBlock("h1", blocks.Header)
 	RegistryBlock("h2", blocks.Header)
@@ -27,10 +28,23 @@ func init() {
 	RegistryBlock("table", blocks.Table)
 }
 
-func RegistryBlock(name string, handler scheme.BlockHandler) {
-	blockHandlers[name] = handler
+
+// ClearAllBlocks removes all block handlers
+func ClearAllBlocks() {
+	blockHandlers = map[string][]scheme.BlockHandler{}
 }
 
+// RegistryBlock adds new handlers for blocks
+func RegistryBlock(name string, handler scheme.BlockHandler) {
+	_, ok := blockHandlers[name]
+
+	if !ok {
+		blockHandlers[name] = []scheme.BlockHandler{}
+	}
+	blockHandlers[name] = append(blockHandlers[name], handler)
+}
+
+// Parse - converts html to scheme.Response.
 func Parse(payload string) scheme.Response {
 	nodes := helpers.GetContentSelection(payload)
 
@@ -41,11 +55,13 @@ func Parse(payload string) scheme.Response {
 	nodes.Each(func(i int, selection *goquery.Selection) {
 		if len(selection.Nodes) == 1 {
 			tagName := helpers.GetTagName(selection)
-			handler, ok := blockHandlers[tagName]
+			handlerList, ok := blockHandlers[tagName]
 
 			if ok {
-				if block := handler(selection); block != nil {
-					response.Blocks = append(response.Blocks, *block)
+				for _, handler := range handlerList {
+					if block := handler(selection); block != nil {
+						response.Blocks = append(response.Blocks, *block)
+					}
 				}
 			}
 		}
