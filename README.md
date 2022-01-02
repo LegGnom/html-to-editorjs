@@ -1,4 +1,4 @@
-Simple converter from html to json for editor.js
+Simple converter from html to json for [editor.js][editor]
 
 ## Installation
 
@@ -76,4 +76,11 @@ It will generate the following output:
 }
 ```
 
-[License](#license)
+## License
+
+The [BSD 3-Clause license][bsd], the same as the [Go language][golic]. Cascadia's license is [here][caslic].
+
+[editor]: https://editorjs.io/
+[golic]: http://golang.org/LICENSE
+[bsd]: http://opensource.org/licenses/BSD-3-Clause
+[caslic]: https://github.com/andybalholm/cascadia/blob/master/LICENSE
